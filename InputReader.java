@@ -1,6 +1,9 @@
 import java.util.HashSet;
 import java.util.Scanner;
-
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.util.*;
 /**
  * InputReader reads typed text input from the standard text terminal. 
  * The text typed by a user is then chopped into words, and a set of words 
@@ -41,5 +44,28 @@ public class InputReader
             words.add(word);
         }
         return words;
+    }
+    public HashSet<String> getInput(String filename) 
+    {
+        Charset charset = Charset.forName("US-ASCII");
+        Path path = Paths.get(filename);
+        try (BufferedReader reader = Files.newBufferedReader(path, charset))
+        {
+            String input = reader.readLine().trim().toLowerCase();
+            String[] wordArray = input.split(" ");
+            HashSet<String> words = new HashSet<>();
+            for(String word : wordArray)
+            {
+                words.add(word);
+            }
+            return words;
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("Unable to open " + filename);
+        }
+        catch(IOException e) {
+            System.err.println("A problem was encountered reading " + filename);
+        }
+        return null;
     }
 }

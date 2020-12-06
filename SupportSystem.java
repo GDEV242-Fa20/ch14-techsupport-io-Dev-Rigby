@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.Scanner;
 
 /**
  * This class implements a technical support system.
@@ -25,7 +26,7 @@ public class SupportSystem
     public SupportSystem()
     {
         reader = new InputReader();
-        responder = new Responder();
+        responder = new Responder("response.txt");
     }
 
     /**
@@ -37,16 +38,37 @@ public class SupportSystem
         boolean finished = false;
 
         printWelcome();
-
-        while(!finished) {
-            HashSet<String> input = reader.getInput();
-
-            if(input.contains("bye")) {
-                finished = true;
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Are you uploading a file? (yes or no)");
+        String initialInput = scan.nextLine();
+        if (initialInput.equalsIgnoreCase("yes"))
+        {
+            System.out.println("What is the file name?");
+            String filename = scan.nextLine();
+            while(!finished) {
+                HashSet<String> input = reader.getInput(filename);
+    
+                if(input.contains("bye")) {
+                    finished = true;
+                }
+                else {
+                    String response = responder.generateResponse(input);
+                    System.out.println(response);
+                }
             }
-            else {
-                String response = responder.generateResponse(input);
-                System.out.println(response);
+        }
+        else
+        {
+            while(!finished) {
+                HashSet<String> input = reader.getInput();
+    
+                if(input.contains("bye")) {
+                    finished = true;
+                }
+                else {
+                    String response = responder.generateResponse(input);
+                    System.out.println(response);
+                }
             }
         }
         printGoodbye();
